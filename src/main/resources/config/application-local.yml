@@ -1,0 +1,52 @@
+server:
+  port: 9200
+  #ssl:
+  #  enabled: true
+  #  key-store: keystore.p12
+  #  key-store-password: rhatoRl121!
+  #  key-store-type: PKCS12
+  #  key-alias: bns-ssl
+  #port: 9443
+
+temporary-file-path: ${java.io.tmpdir}
+static-file-context:
+
+spring:
+  profiles: local
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+    jpa:
+      database-platform: org.hibernate.dialect.H2Dialect
+    h2:
+      console:
+        enabled: true
+    sql:
+      init:
+        mode: always
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: false
+  security:
+    oauth2:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+app:
+  config:
+    encryption: true
+
+#logging:
+#  level:
+#    org:
+#      hibernate:
+#        SQL: DEBUG
+#        type: trace
+#          descriptor:
+#            sql:
+#              BasicBinder: trace

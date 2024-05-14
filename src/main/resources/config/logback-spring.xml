@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <!-- property -->
+    <property name="LOG_HOME" value="/bestfin/logs/dambee-api"/>
+
+    <!-- appender -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/application.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/application.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>90</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNC-FILE" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE"/>
+    </appender>
+
+    <!-- logger -->
+    <springProfile name="local">
+        <logger name="org.hibernate" level="INFO" additivity="false"/>
+        <logger name="org.hibernate.SQL" level="WARN" additivity="false"/>
+        <logger name="com" level="INFO"/>
+        <logger name="org.springframework.web.client.RestTemplate" level="WARN"/>
+        <logger name="com.fin.best.bestfin" level="INFO"/>
+
+        <root level="WARN" additivity="false">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="ASYNC-FILE"/>
+            <!--<appender-ref ref="ASYNC_SLACK"/>-->
+        </root>
+    </springProfile>
+
+</configuration>
