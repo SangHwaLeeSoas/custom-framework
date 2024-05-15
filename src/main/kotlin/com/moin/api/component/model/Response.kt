@@ -20,7 +20,8 @@ class Response : ResponseEntity<Any> {
 }
 
 class ResponseData {
-    var resultCode: Int = AppConst.Response.DefaultEmptyCode
+//    var resultCode: Int = AppConst.Response.DefaultEmptyCode
+    var resultCode: Int = 200
     var resultMsg: String = AppConst.ResCode.OK.httpStatus.name
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -35,20 +35,29 @@ allOpen {
 }
 
 dependencies {
+	/* SPRING */
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
-	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("org.springframework.boot:spring-boot-starter-logging")
-	implementation("org.springframework.security:spring-security-jwt:1.0.10.RELEASE")
+
+	/* KOTLIN */
+	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("com.querydsl:querydsl-jpa:4.2.1")
-	kapt("com.querydsl:querydsl-apt:4.2.1:jpa")
+
+	/* DB */
+	implementation("org.hibernate.orm:hibernate-core:6.5.0.Final")
+//	implementation("com.querydsl:querydsl-jpa:4.2.1")
+//	kapt("com.querydsl:querydsl-apt:4.2.1:jpa")
+	runtimeOnly("com.h2database:h2")
+
+	/* SECURITY */
+	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
 	runtimeOnly("org.springframework.boot:spring-boot-devtools")
-
-	runtimeOnly("com.h2database:h2")
 
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")

@@ -1,6 +1,6 @@
 package com.moin.api.component.exception
 
-import com.fin.best.bestfin.api.component.model.ResponseHandler
+import com.moin.api.component.model.Response
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -19,9 +19,8 @@ class ExceptionHandleController {
     **/
     @ExceptionHandler(value = [CommonException::class])
     @ResponseBody
-    fun commonException(commonException: CommonException, request: HttpServletRequest): ResponseHandler<Any?> {
-        // TODO Response로 변경
-        return ResponseHandler(commonException.resCode,  commonException.result)
+    fun commonException(commonException: CommonException, request: HttpServletRequest): Response {
+        return Response(commonException.resCode,  commonException.result)
     }
 
 }
