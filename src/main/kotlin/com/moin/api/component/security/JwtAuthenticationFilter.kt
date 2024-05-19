@@ -1,4 +1,4 @@
-package com.moin.api.config
+package com.moin.api.component.security
 
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest

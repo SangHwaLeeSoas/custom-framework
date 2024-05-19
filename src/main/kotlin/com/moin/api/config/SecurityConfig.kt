@@ -1,5 +1,8 @@
 package com.moin.api.config
 
+import com.moin.api.component.security.CustomAuthenticationSuccessHandler
+import com.moin.api.component.security.JwtAuthenticationEntryPoint
+import com.moin.api.component.security.JwtAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationProvider
@@ -14,11 +17,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 class SecurityConfig(
     private val jwtAuthenticationFilter: JwtAuthenticationFilter,
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint,
-    private val authenticationProvider: AuthenticationProvider
+    private val authenticationProvider: AuthenticationProvider,
+    private val customSccessHandler: CustomAuthenticationSuccessHandler,
 ) {
 
     @Bean
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain? =
+    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain =
         http
             .headers { headers ->
                 headers.frameOptions { frameOptions ->
@@ -28,7 +32,6 @@ class SecurityConfig(
             .csrf { it.disable() }
             .authorizeHttpRequests {
                 it
-                    .requestMatchers("/user/login").permitAll()
                     .requestMatchers("/user/signup").permitAll()
                     .requestMatchers("/h2-console/**").permitAll()  /* H2 CONSOLE */
                     .anyRequest().authenticated()
@@ -37,13 +40,13 @@ class SecurityConfig(
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authenticationProvider(authenticationProvider)
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
-
-//            .logout {
-//                it
-//                    .logoutUrl("/logout")
-//                    .logoutSuccessHandler(HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))
-//                    .invalidateHttpSession(true)
-//            }
+            .formLogin {
+                it.loginProcessingUrl("/user/login")
+                    .usernameParameter("userId")
+                    .passwordParameter("password")
+                    .successHandler(customSccessHandler)
+            }
             .build()
+
 
 }

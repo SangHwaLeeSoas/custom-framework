@@ -1,4 +1,4 @@
-package com.moin.api.config
+package com.moin.api.component.security
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.security.Key
@@ -24,22 +25,34 @@ class JwtService (
         return claimsResolver(claims)
     }
 
-    fun generateToken(extraClaims: Map<String, Any>, userDetails: UserDetails): String = Jwts.builder()
-        .setClaims(extraClaims)
-        .setSubject(userDetails.username)
-        .setIssuedAt(Date(System.currentTimeMillis()))
-        .setExpiration(Date(System.currentTimeMillis() + expirationTime))
-        .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-        .compact()
+//    fun generateToken(extraClaims: Map<String, Any>, userDetails: UserDetails): String = Jwts.builder()
+//        .setClaims(extraClaims)
+//        .setSubject(userDetails.username)
+//        .setIssuedAt(Date(System.currentTimeMillis()))
+//        .setExpiration(Date(System.currentTimeMillis() + expirationTime))
+//        .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+//        .compact()
+
+    fun generateToken(authentication: Authentication): String {
+        val now = Date()
+        val expireDtm = Date(now.time + expirationTime)
+
+        return Jwts.builder()
+            .setSubject(authentication.name)
+            .setIssuedAt(now)
+            .setExpiration(expireDtm)
+            .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+            .compact()
+    }
 
     private fun extractAllClaims(token: String): Claims = Jwts
         .parserBuilder()
         .setSigningKey(getSignInKey())
         .build()
-        .parseClaimsJws(token) //json web signature
+        .parseClaimsJws(token)
         .body
 
-    fun generateToken(userDetails: UserDetails): String = generateToken(HashMap(), userDetails)
+//    fun generateToken(userDetails: UserDetails): String = generateToken(HashMap(), userDetails)
 
     fun isTokenValid(token: String, userDetails: UserDetails): Boolean {
         val username = extractUsername(token)
