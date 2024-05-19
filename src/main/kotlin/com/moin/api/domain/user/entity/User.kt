@@ -19,7 +19,7 @@ class User(
     @Comment("회원 IDX")
     val userIdx: Long = 0,
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100, unique = true)
     @Comment("회원 ID")
     val userId: String,
 

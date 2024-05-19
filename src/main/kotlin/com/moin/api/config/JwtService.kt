@@ -12,13 +12,10 @@ import java.security.Key
 import java.util.*
 
 @Service
-class JwtService {
-
-    @Value("\${jwt.secret}")
-    lateinit var secretKey: String
-
-    @Value("\${jwt.expiration}")
-    lateinit var expirationTime: Number
+class JwtService (
+    @Value("\${jwt.secret}") private val secretKey: String,
+    @Value("\${jwt.expiration}") private val expirationTime: Long
+){
 
     fun extractUsername(token: String): String = extractClaim(token, Claims::getSubject)
 
@@ -31,7 +28,7 @@ class JwtService {
         .setClaims(extraClaims)
         .setSubject(userDetails.username)
         .setIssuedAt(Date(System.currentTimeMillis()))
-        .setExpiration(Date(System.currentTimeMillis() + expirationTime.toLong()))
+        .setExpiration(Date(System.currentTimeMillis() + expirationTime))
         .signWith(getSignInKey(), SignatureAlgorithm.HS256)
         .compact()
 

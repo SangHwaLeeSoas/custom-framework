@@ -35,7 +35,7 @@ app:
 
 jwt:
   secret: customsecretkeycustomsecretkeycustomsecretkeycustomsecretkey
-  expiration: 720000
+  expiration: 108000000 # 30분
 
 #logging:
 #  level:
