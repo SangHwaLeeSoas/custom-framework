@@ -17,29 +17,29 @@ class User(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     @Comment("회원 IDX")
-    var userIdx: Long = 0,
+    var userIdx: Long = 0L,
 
     @Column(nullable = false, length = 100, unique = true)
     @Comment("회원 ID")
-    var userId: String,
+    var userId: String = "",
 
     @Column(nullable = false, length = 200)
     @Comment("비밀번호")
-    var userPassword: String,
+    var userPassword: String = "",
 
     @Column(nullable = false, length = 50)
     @Comment("이름")
-    var name: String,
+    var name: String = "",
 
     @Column(nullable = false, length = 20)
     @Comment("ID 타입 (REG_NO, BUSINESS_NO)")
-    var idType: String,
+    var idType: String = "",
 
     @Column(nullable = false, length = 200)
     @Comment("ID 값 (주민등록번호, 사업자등록번호) -idType 컬럼 값에 따라 형식 변경")
-    var idValue: String,
+    var idValue: String = "",
 
-    @Column(name = "role", length = 20)
+    @Column(nullable = false, length = 20)
     var role: String = AppConst.User.Role.USER.code,
 
     @Comment("최신 로그인 이력 IDX")
@@ -81,16 +81,6 @@ class User(
     override fun isEnabled(): Boolean {
         return true
     }
-
-    /* 기본 생성자 */
-    constructor() : this(
-        userId = "",
-        userPassword = "",
-        name = "",
-        idType = "",
-        idValue = "",
-        role = AppConst.User.Role.USER.code
-    )
 
     /* 회원 데이터 생성자 */
     constructor(

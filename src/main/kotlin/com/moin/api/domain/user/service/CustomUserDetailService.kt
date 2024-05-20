@@ -12,7 +12,9 @@ class CustomUserDetailService(
     private val userRepository: UserRepository,
 ) : UserDetailsService {
 
+
     private val logger = LoggerFactory.getLogger(CustomUserDetailService::class.java)
+
 
     @Throws(UsernameNotFoundException::class)
     override fun loadUserByUsername(userId: String): User {

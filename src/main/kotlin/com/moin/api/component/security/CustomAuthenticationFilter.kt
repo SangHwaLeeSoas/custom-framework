@@ -1,9 +1,10 @@
 package com.moin.api.component.security
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fin.best.bestfin.api.component.constants.AppConst
 import com.moin.api.component.model.Response
-import com.moin.api.domain.user.dto.LoginRequestDTO
+import com.moin.api.domain.user.model.LoginRequestDTO
+import com.moin.api.domain.user.service.UserService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -21,18 +22,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.stereotype.Component
 
 @Component
-class CustomAuthenticationFilter : UsernamePasswordAuthenticationFilter() {
+class CustomAuthenticationFilter (
+    private val jwtService: JwtService,
+    private val userService: UserService
+        ) : UsernamePasswordAuthenticationFilter() {
 
     @Autowired
     override fun setAuthenticationManager(authenticationManager: AuthenticationManager) {
         super.setAuthenticationManager(authenticationManager)
     }
-
-    @Autowired
-    lateinit var jwtService: JwtService
-
-    @Autowired
-    lateinit var objectMapper: ObjectMapper
 
 
     private val logger = LoggerFactory.getLogger(CustomAuthenticationFilter::class.java)
@@ -43,7 +41,7 @@ class CustomAuthenticationFilter : UsernamePasswordAuthenticationFilter() {
         response: HttpServletResponse
     ): Authentication {
         logger.info("FILTER => attemptAuthentication !!!")
-        val loginRequest = objectMapper.readValue(request.inputStream, LoginRequestDTO::class.java)
+        val loginRequest = jacksonObjectMapper().readValue(request.inputStream, LoginRequestDTO::class.java)
         val authRequest = UsernamePasswordAuthenticationToken(loginRequest.userId, loginRequest.password)
         return authenticationManager.authenticate(authRequest)
     }
@@ -57,16 +55,12 @@ class CustomAuthenticationFilter : UsernamePasswordAuthenticationFilter() {
     ) {
         logger.info("FILTER => successfulAuthentication !!!")
         logger.info(authResult)
-        val jwtToken = jwtService.generateToken(authResult)
+        val tokenDTO = jwtService.generateToken(authResult)
 
-        // TODO : 로그인 서비스 호출
+        userService.makeLoginHistory(tokenDTO)
 
-        response.contentType = MediaType.APPLICATION_JSON_VALUE
-        response.status = HttpStatus.OK.value()
-
-        val responseData = Response(AppConst.ResCode.OK, mapOf("token" to jwtToken)).body
-        objectMapper.writeValue(response.outputStream, responseData)
-
+        val responseData = Response(AppConst.ResCode.OK, mapOf("token" to tokenDTO.token)).body
+        writeResponse(response, HttpStatus.OK, responseData)
         logger.info("unsuccessfulAuthentication : $responseData")
     }
 
@@ -76,16 +70,19 @@ class CustomAuthenticationFilter : UsernamePasswordAuthenticationFilter() {
         response: HttpServletResponse,
         failed: AuthenticationException
     ) {
-        response.contentType = MediaType.APPLICATION_JSON_VALUE
-        response.status = HttpStatus.UNAUTHORIZED.value()
-
         val resCode = determineMessage(failed)
         val responseData = Response(resCode).body
-
-        objectMapper.writeValue(response.outputStream, responseData)
+        writeResponse(response, HttpStatus.UNAUTHORIZED, responseData)
         logger.info("unsuccessfulAuthentication : $responseData")
     }
 
+    /* 공통 응답 설정 메소드 */
+    private fun writeResponse(response: HttpServletResponse, status: HttpStatus, responseData: Any?) {
+        response.contentType = MediaType.APPLICATION_JSON_VALUE
+        response.status = status.value()
+        jacksonObjectMapper().writeValue(response.outputStream, responseData)
+        logger.info("Response: $responseData")
+    }
 
     /* AuthenticationProvider에서 발생한 AuthenticationException를 ResCode로 리턴 */
     private fun determineMessage(authException: AuthenticationException): AppConst.ResCode {

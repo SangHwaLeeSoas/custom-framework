@@ -1,5 +1,6 @@
 package com.moin.api.component.security
 
+import com.moin.api.component.model.AuthTokenDTO
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
@@ -33,16 +34,18 @@ class JwtService (
 //        .signWith(getSignInKey(), SignatureAlgorithm.HS256)
 //        .compact()
 
-    fun generateToken(authentication: Authentication): String {
+    fun generateToken(authentication: Authentication): AuthTokenDTO {
         val now = Date()
         val expireDtm = Date(now.time + expirationTime)
 
-        return Jwts.builder()
+        val token = Jwts.builder()
             .setSubject(authentication.name)
             .setIssuedAt(now)
             .setExpiration(expireDtm)
             .signWith(getSignInKey(), SignatureAlgorithm.HS256)
             .compact()
+
+        return AuthTokenDTO(authentication.name, token, expireDtm)
     }
 
     private fun extractAllClaims(token: String): Claims = Jwts

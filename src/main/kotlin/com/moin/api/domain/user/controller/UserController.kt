@@ -2,8 +2,8 @@ package com.moin.api.domain.user.controller
 
 import com.fin.best.bestfin.api.component.constants.AppConst
 import com.moin.api.component.model.Response
-import com.moin.api.component.validation.ValidationUtil
-import com.moin.api.domain.user.dto.SignupRequestDTO
+import com.moin.api.component.util.ValidationUtil
+import com.moin.api.domain.user.model.SignupRequestDTO
 import com.moin.api.domain.user.service.UserService
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.PostMapping

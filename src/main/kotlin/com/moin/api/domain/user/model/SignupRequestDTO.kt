@@ -1,9 +1,9 @@
-package com.moin.api.domain.user.dto
+package com.moin.api.domain.user.model
 
 import com.fin.best.bestfin.api.component.constants.AppConst
 import com.moin.api.component.annotation.CheckEnum
-import com.moin.api.component.validation.StringValidator
-import com.moin.api.component.validation.ValidationUtil
+import com.moin.api.component.util.StringUtil
+import com.moin.api.component.util.ValidationUtil
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
@@ -34,12 +34,12 @@ data class SignupRequestDTO(
     fun validate(): AppConst.ResCode? {
         when (idType) {
             AppConst.User.IdType.REG_NO.code ->
-                if (!StringValidator.isValidResidentRegistrationNumber(idValue)) {
+                if (!StringUtil.isValidResidentRegistrationNumber(idValue)) {
                     logger.info("Validation Error : REG_NO => $idValue")
                     return AppConst.ResCode.BAD_REQUEST
                 }
             AppConst.User.IdType.BUSINESS_NO.code ->
-                if (!StringValidator.isValidBusinessRegistrationNumber(idValue)) {
+                if (!StringUtil.isValidBusinessRegistrationNumber(idValue)) {
                     logger.info("Validation Error : BUSINESS_NO => $idValue")
                     return AppConst.ResCode.BAD_REQUEST
                 }

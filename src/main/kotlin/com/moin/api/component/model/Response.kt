@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity
 class Response : ResponseEntity<Any> {
 
     constructor(resCode: AppConst.ResCode) : super(ResponseData(resCode), resCode.httpStatus)
-    constructor(resCode: AppConst.ResCode, responseData: Any?) : super(ResponseData(resCode, responseData), resCode.httpStatus)
+    constructor(resCode: AppConst.ResCode, data: Map<String,Any?>) : super(ResponseData(resCode, data), resCode.httpStatus)
 
 //    fun isSuccess(): Boolean {
 //        return (this.statusCode == AppConst.ResCode.OK.httpStatus)

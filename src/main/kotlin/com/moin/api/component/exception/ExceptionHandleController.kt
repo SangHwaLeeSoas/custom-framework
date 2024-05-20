@@ -24,7 +24,7 @@ class ExceptionHandleController {
     @ExceptionHandler(value = [CommonException::class])
     @ResponseBody
     fun commonException(commonException: CommonException, request: HttpServletRequest): Response {
-        return Response(commonException.resCode,  commonException.result)
+        return Response(commonException.resCode)
     }
 
 

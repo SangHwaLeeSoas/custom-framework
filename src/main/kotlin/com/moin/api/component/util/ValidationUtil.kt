@@ -1,4 +1,4 @@
-package com.moin.api.component.validation
+package com.moin.api.component.util
 
 import com.fin.best.bestfin.api.component.constants.AppConst
 import com.moin.api.component.exception.CommonException
@@ -18,6 +18,7 @@ object ValidationUtil {
 
     private val logger = LoggerFactory.getLogger(ValidationUtil::class.java)
     private val validator: Validator = Validation.buildDefaultValidatorFactory().validator
+
 
     /**
      *  @name         : validateThrows
