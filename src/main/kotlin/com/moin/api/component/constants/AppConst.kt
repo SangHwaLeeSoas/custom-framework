@@ -119,6 +119,10 @@ object AppConst {
         BAD_CREDENTIALS(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호가 일치하지 않습니다."),
 
         /* 송금 */
+        NOT_FOUND_QUOTE(HttpStatus.BAD_REQUEST, "견정서 정보를 찾을 수 없습니다."),
+        INVALID_QUOTE(HttpStatus.BAD_REQUEST, "유효하지 않은 견적서입니다."),
+        EXPIRED_QUOTE(HttpStatus.BAD_REQUEST, "견적서가 만료 되었습니다."),
+        OVER_DAILY_TRANSFER_LIMIT(HttpStatus.BAD_REQUEST, "오늘 송금 한도 초과입니다."),
         EXCHANGE_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "환율 정보 조회를 실패했습니다."),
         FEE_POLICY_NOT_FOUND(HttpStatus.BAD_REQUEST, "수수료 정책 조회를 실패했습니다."),
         NOT_ENOUGH_SOURCE_AMOUNT(HttpStatus.BAD_REQUEST, "너무 적은 송금 금액입니다."),

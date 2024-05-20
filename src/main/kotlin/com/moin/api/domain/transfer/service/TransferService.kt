@@ -7,14 +7,15 @@ import com.moin.api.component.util.BigDecimalUtil
 import com.moin.api.component.util.CurrencyUtil
 import com.moin.api.component.util.UserDetailsUtil
 import com.moin.api.domain.transfer.entity.Quote
-import com.moin.api.domain.transfer.model.ExchangeDTO
-import com.moin.api.domain.transfer.model.QuoteRequestDTO
+import com.moin.api.domain.transfer.model.*
 import com.moin.api.domain.transfer.repository.QuoteRepository
+import com.moin.api.domain.user.entity.User
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
@@ -80,8 +81,68 @@ class TransferService(
 
 
     /* 송금 요청 */
-    fun requestTransfer() {
-        logger.info("requestTransfer !!!")
+    @Transactional
+    @Throws(CommonException::class)
+    fun requestTransfer(transferRequestDTO: TransferRequestDTO) {
+
+        val user = userDetailsUtil.getUserDetails()
+
+        val quote = quoteRepository.findById(transferRequestDTO.quoteId)
+            .orElseThrow { CommonException(AppConst.ResCode.NOT_FOUND_QUOTE) }
+
+        /* 만료일시 검증 */
+        if (quote.expireTime.isBefore(LocalDateTime.now()))
+            throw CommonException(AppConst.ResCode.EXPIRED_QUOTE)
+
+        /* 대기 상태에서만 변경 가능 */
+        if (quote.statusCode != AppConst.Transfer.StatusCode.WAIT.code)
+            throw CommonException(AppConst.ResCode.INVALID_QUOTE)
+
+
+        /* 일일 송금 제한 검증 */
+//        checkDailyLimitSourceAmount(user, quote.sourceAmount)
+
+        quote.statusCode = AppConst.Transfer.StatusCode.COMPLETE.code
+        quote.requestedDate = LocalDateTime.now()
+    }
+
+
+    @Transactional(readOnly = true)
+    fun getQuoteList(): Map<String,Any?> {
+        val user = userDetailsUtil.getUserDetails()
+        val quoteList = quoteRepository.findQuoteList(user.userIdx)
+        val quoteSummaryDTO = getDailyTransferSummary(user.userIdx)
+
+        return mapOf(
+            "history" to quoteList,
+            "todayTransferUsdAmount" to quoteSummaryDTO.totalSourceAmount,
+            "todayTransferCount" to quoteSummaryDTO.totalTransferCount,
+            "name" to user.name,
+            "userId" to user.userId,
+        )
+    }
+
+
+    /* 일일 송금 제한 검증 */
+    fun checkDailyLimitSourceAmount(user: User, amount: Long) {
+        /* TODO : 송금 화폐는 원화인데, 송금 제한은 USD로 설정 되어있음.
+        *  환율을 적용하여 USD로 변환하여 계산해야 하는데, 환율에 대한 기준이 하루동안 일정하지 않으므로 추가적인 정책이 필요.
+        * */
+
+//        val dailyTotalSourceAmount = getDailyTotalSourceAmount(user.userIdx)
+
+//        val dailyLimit = AppConst.Transfer.DAILY_LIMIT_SOURCE_AMOUNT
+//        if (dailyTotalSourceAmount + amount > dailyLimit)
+//            throw CommonException(AppConst.ResCode.DAILY_LIMIT_SOURCE_AMOUNT)
+    }
+
+
+    /* 일일 송금 합계 조회 */
+    @Transactional(readOnly = true)
+    fun getDailyTransferSummary(userIdx: Long): DailyTransferSummaryProjection {
+        val today = LocalDate.now()
+        val statusCode = AppConst.Transfer.StatusCode.COMPLETE.code
+        return quoteRepository.findDailyTransferSummary(statusCode, today, userIdx)
     }
 
 
