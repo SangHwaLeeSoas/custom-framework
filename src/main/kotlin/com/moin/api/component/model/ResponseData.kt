@@ -19,4 +19,6 @@ class ResponseData {
         this.resultMsg = resCode.detail
         this.values = responseData
     }
+
+
 }

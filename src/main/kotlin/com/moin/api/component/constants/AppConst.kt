@@ -41,6 +41,8 @@ object AppConst {
 
         /* 회원 */
         DUPLICATED_USER_ID(HttpStatus.BAD_REQUEST, "중복된 아이디입니다."),
+        NOT_FOUND_USER(HttpStatus.BAD_REQUEST, "회원 정보를 찾을 수 없습니다."),
+        BAD_CREDENTIALS(HttpStatus.BAD_REQUEST, "아이디 또는 비밀번호가 일치하지 않습니다."),
 
     }
 

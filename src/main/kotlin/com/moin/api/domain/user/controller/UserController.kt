@@ -19,6 +19,7 @@ class UserController(
 
     private val logger = LoggerFactory.getLogger(UserController::class.java)
 
+
     @PostMapping("/signup")
     fun signup(
         @RequestBody params: SignupRequestDTO

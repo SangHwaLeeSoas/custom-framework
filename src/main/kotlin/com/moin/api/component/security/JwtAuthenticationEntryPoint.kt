@@ -24,8 +24,7 @@ class JwtAuthenticationEntryPoint : AuthenticationEntryPoint {
         authException: AuthenticationException
     ) {
 
-        /* TODO: authException 종류에 따른 분기 */
-
+        /* TODO: 필요시 ErrorCode 세분화 */
         response.contentType = MediaType.APPLICATION_JSON_VALUE
         response.status = HttpStatus.UNAUTHORIZED.value()
 
@@ -37,14 +36,4 @@ class JwtAuthenticationEntryPoint : AuthenticationEntryPoint {
         logger.info("Unauthorized access")
     }
 
-//    private fun determineMessage(authException: AuthenticationException): String {
-//        return when (authException) {
-//            is BadCredentialsException -> "Invalid username or password"
-//            is AccountExpiredException -> "Account expired"
-//            is CredentialsExpiredException -> "Credentials expired"
-//            is DisabledException -> "Account disabled"
-//            is LockedException -> "Account locked"
-//            else -> "Unauthorized access"
-//        }
-//    }
 }
