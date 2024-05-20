@@ -37,6 +37,11 @@ jwt:
   secret: customsecretkeycustomsecretkeycustomsecretkeycustomsecretkey
   expiration: 108000000 # 30분
 
+crypto:
+  aes:
+    key: ASDF123456789012QWER123456789012
+    iv: 1234567890123456
+
 #logging:
 #  level:
 #    org:

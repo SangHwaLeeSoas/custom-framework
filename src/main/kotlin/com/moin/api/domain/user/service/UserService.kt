@@ -21,7 +21,6 @@ class UserService(
     private val passwordEncoder: BCryptPasswordEncoder,
 ) {
 
-
     private val logger = LoggerFactory.getLogger(UserService::class.java)
 
 
@@ -33,16 +32,14 @@ class UserService(
         checkDuplicatedUser(signupRequestDTO.userId)
 
         val encodedPassword = passwordEncoder.encode(signupRequestDTO.password)
-        val encodedIdValue = passwordEncoder.encode(signupRequestDTO.password)
         val user = User(
             userId = signupRequestDTO.userId,
             userPassword = encodedPassword,
             name = signupRequestDTO.name,
             idType = signupRequestDTO.idType,
-            idValue = encodedIdValue,
+            idValue = signupRequestDTO.idValue,
             role = AppConst.User.Role.USER.code
         )
-        logger.info("MAKE_USER : $user")
         userRepository.save(user)
     }
 
@@ -63,6 +60,7 @@ class UserService(
             authTokeExpireDtm = DateUtil.dateToLocalDateTime(authTokenDTO.expireDtm),
         )
         loginHistoryRepository.save(loginHistory)
+        user.latestLoginHistoryIdx = loginHistory.loginHistoryIdx
     }
 
 
@@ -70,7 +68,6 @@ class UserService(
     @Throws(CommonException::class)
     private fun checkDuplicatedUser(userId: String) {
         val user = userRepository.findByUserId(userId)
-        logger.info("USER : $user")
         if (user != null)
             throw CommonException(AppConst.ResCode.DUPLICATED_USER_ID)
     }

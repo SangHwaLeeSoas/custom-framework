@@ -1,6 +1,7 @@
 package com.moin.api.domain.user.entity
 
 import com.fin.best.bestfin.api.component.constants.AppConst
+import com.moin.api.component.crypto.StringCryptoConverter
 import jakarta.persistence.*
 import org.hibernate.annotations.Comment
 import org.springframework.security.core.GrantedAuthority
@@ -29,6 +30,7 @@ class User(
 
     @Column(nullable = false, length = 50)
     @Comment("이름")
+    @field:Convert(converter = StringCryptoConverter::class)
     var name: String = "",
 
     @Column(nullable = false, length = 20)
@@ -37,6 +39,7 @@ class User(
 
     @Column(nullable = false, length = 200)
     @Comment("ID 값 (주민등록번호, 사업자등록번호) -idType 컬럼 값에 따라 형식 변경")
+    @field:Convert(converter = StringCryptoConverter::class)
     var idValue: String = "",
 
     @Column(nullable = false, length = 20)

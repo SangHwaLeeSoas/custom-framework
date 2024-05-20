@@ -15,8 +15,8 @@ import java.util.*
 
 @Service
 class JwtService (
-    @Value("\${jwt.secret}") private val secretKey: String,
-    @Value("\${jwt.expiration}") private val expirationTime: Long
+    @Value("\${jwt.secret}") private val SECRET_KEY: String,
+    @Value("\${jwt.expiration}") private val EXPIRATION_TIME: Long
 ){
 
     fun extractUsername(token: String): String = extractClaim(token, Claims::getSubject)
@@ -36,7 +36,7 @@ class JwtService (
 
     fun generateToken(authentication: Authentication): AuthTokenDTO {
         val now = Date()
-        val expireDtm = Date(now.time + expirationTime)
+        val expireDtm = Date(now.time + EXPIRATION_TIME)
 
         val token = Jwts.builder()
             .setSubject(authentication.name)
@@ -67,7 +67,7 @@ class JwtService (
     private fun extractExpiration(token: String): Date = extractClaim(token, Claims::getExpiration)
 
     private fun getSignInKey(): Key {
-        val keyBytes = Decoders.BASE64.decode(secretKey)
+        val keyBytes = Decoders.BASE64.decode(SECRET_KEY)
         return Keys.hmacShaKeyFor(keyBytes)
     }
 }
