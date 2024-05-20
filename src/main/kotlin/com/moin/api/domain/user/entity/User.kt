@@ -50,11 +50,11 @@ class User(
 
     @Column(nullable = false)
     @Comment("등록일시")
-    var regDtm: LocalDateTime = LocalDateTime.now(),
+    var regTime: LocalDateTime = LocalDateTime.now(),
 
     @Column(nullable = false)
     @Comment("수정일시")
-    var modDtm: LocalDateTime = LocalDateTime.now(),
+    var modTime: LocalDateTime = LocalDateTime.now(),
 
     ) : UserDetails {
     override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
@@ -101,7 +101,7 @@ class User(
         idType = idType,
         idValue = idValue,
         role = role,
-        regDtm = LocalDateTime.now(),
-        modDtm = LocalDateTime.now()
+        regTime = LocalDateTime.now(),
+        modTime = LocalDateTime.now()
     )
 }

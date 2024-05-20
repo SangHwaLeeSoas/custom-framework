@@ -24,7 +24,6 @@ class UserController(
     fun signup(
         @RequestBody params: SignupRequestDTO
     ): Response {
-        logger.info("CALLED SIGNUP : $params")
 
         ValidationUtil.validateThrows(params)
         userService.makeUser(params)

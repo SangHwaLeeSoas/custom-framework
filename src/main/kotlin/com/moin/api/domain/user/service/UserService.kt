@@ -72,10 +72,4 @@ class UserService(
             throw CommonException(AppConst.ResCode.DUPLICATED_USER_ID)
     }
 
-
-    fun getUserInfo(userId: String) {
-        logger.info("getUserInfo")
-    }
-
-
 }

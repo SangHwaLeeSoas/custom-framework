@@ -42,6 +42,10 @@ crypto:
     key: ASDF123456789012QWER123456789012
     iv: 1234567890123456
 
+dunamnu:
+  base-url: https://quotation-api-cdn.dunamu.com
+  exchange-rate:
+    uri: /v1/forex/recent?codes=FRX.KRWJPY,FRX.KRWUSD #TODO: URI/파라미터는 코드에서 관리
 #logging:
 #  level:
 #    org:
