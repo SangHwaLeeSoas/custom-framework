@@ -33,12 +33,14 @@ object AppConst {
 
     enum class ResCode(val httpStatus: HttpStatus, val detail: String) {
 
-        /****************************** 공통 ******************************/
+        /* 공통 */
         OK(HttpStatus.OK, "OK"),
         BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 파라미터입니다."),
         UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "사용할 수 없는 토큰입니다."),
         INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 에러 입니다."),
-        /****************************** 공통 ******************************/
+
+        /* 회원 */
+        DUPLICATED_USER_ID(HttpStatus.BAD_REQUEST, "중복된 아이디입니다."),
 
     }
 

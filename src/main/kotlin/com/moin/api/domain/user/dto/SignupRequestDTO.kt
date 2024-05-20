@@ -16,6 +16,7 @@ data class SignupRequestDTO(
 
     @field:NotBlank
     @field:Size(min = 6)
+    // TODO : 필요 시 Password 규칙 추가
     val password: String,
 
     @field:NotBlank

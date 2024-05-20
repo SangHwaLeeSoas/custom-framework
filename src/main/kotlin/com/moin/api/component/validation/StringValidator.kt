@@ -16,4 +16,5 @@ object StringValidator {
         if (value.length != 14) return false
         return Regex(BUSINESS_REGISTRATION_NUMBER).matches(value)
     }
+
 }

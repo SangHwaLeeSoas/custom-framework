@@ -13,19 +13,19 @@ class LoginHistory(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     @Comment("로그인 이력 IDX")
-    val loginHistoryIdx: Long,
+    var loginHistoryIdx: Long,
 
     @Column(nullable = false, length = 200)
     @Comment("인증 토큰 코드")
-    val authTokenCode: String,
+    var authTokenCode: String,
 
     @Column(nullable = false)
     @Comment("인증토큰 만료일시")
-    val authTokeExpireDtm: LocalDateTime,
+    var authTokeExpireDtm: LocalDateTime,
 
     @Column(nullable = false)
     @Comment("등록일시")
-    val regDtm: LocalDateTime = LocalDateTime.now(),
+    var regDtm: LocalDateTime = LocalDateTime.now(),
 ) {
 
 }
