@@ -16,6 +16,7 @@
 - Spring Boot 3.2.5
 - DB : H2
 - IDE : IntelliJ
+- Spring Profile : local로 설정하시고 실행하시면 됩니다.
 
 
 # 공통
